@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+    <script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
+    
+    <script>
+      $(document).ready(function() {
+          var tmp_ubersuggest = $('#result').html();
+          // $('#result').html(tmp_ubersuggest.replace(/", "/g, '<br>').replace(/\["/g, '<br>').replace(/\]"/g, '<br>'));
+          // html table
+
+
+          // canvas.js
+          console.log($('#trends_data').text());
+          if($('#trends_data').text() != '[]') {
+
+            var dataPoints = [[], [], [], [], []];
+            var tmp_googletrends = $.parseJSON($('#trends_data').text());
+            $.urlParam = function(name) {
+              var results = new RegExp('[\?&]' + name + '=([^#]*)').exec(window.location.href);
+              return results[1].split('&' + name + '=') || 0;
+            }
+            var tmp_googletrends_keywords = $.urlParam('keywords');
+            console.log(tmp_googletrends_keywords);
+            for (var n=0; n<5; n++) {
+              if (tmp_googletrends_keywords[n] != undefined) {
+                tmp_googletrends_keywords[n] = tmp_googletrends_keywords[n].replace('+', ' ');
+                tmp_googletrends_keywords[n] = decodeURIComponent(tmp_googletrends_keywords[n]);
+              } else {
+                tmp_googletrends_keywords[n] = '';
+              }
+            }
+            console.log(tmp_googletrends_keywords);
+            
+            var chart = new CanvasJS.Chart("trends", {
+              animationEnabled: true,
+              theme: "light2",
+              title: {
+                text: "Search Trends"
+              },
+              axisY: {
+                title: "Search Times",
+                titleFontSize: 24
+              },
+              toolTip: {
+                shared: "true"
+              },
+              legend: {
+                cursor: "pointer",
+                itemclick: toggleDataSeries
+              },
+              data: [{ 
+                type: "spline",
+                visible: true,
+                showInLegend: true,
+                yValueFormatString: "#,### Times",
+                name: tmp_googletrends_keywords[0],
+                dataPoints: dataPoints[0]
+              },
+              {
+                type: "spline",
+                visible: true,
+                showInLegend: true,
+                yValueFormatString: "#,### Times",
+                name: tmp_googletrends_keywords[1],
+                dataPoints: dataPoints[1]
+              },
+              {
+                type: "spline",
+                visible: true,
+                showInLegend: true,
+                yValueFormatString: "#,### Times",
+                name: tmp_googletrends_keywords[2],
+                dataPoints: dataPoints[2]
+              },
+              {
+                type: "spline",
+                visible: true,
+                showInLegend: true,
+                yValueFormatString: "#,### Times",
+                name: tmp_googletrends_keywords[3],
+                dataPoints: dataPoints[3]
+              },
+              {
+                type: "spline",
+                visible: true,
+                showInLegend: true,
+                yValueFormatString: "#,### Times",
+                name: tmp_googletrends_keywords[4],
+                dataPoints: dataPoints[4]
+              }]
+            });
+
+            function addData(data) {
+              for (var i = 0; i < 5; i++) {
+                if (tmp_googletrends_keywords[i] != "") {
+                  for (var j = 0; j < tmp_googletrends[0].length; j++) {
+                    dataPoints[i].push({
+                      x: new Date(tmp_googletrends[0][j].date),
+                      y: tmp_googletrends[0][j][tmp_googletrends_keywords[i]]
+                    });
+                  }
+                } else {
+                  dataPoints[i] = [];
+                }
+              }
+              chart.render();
+            }
+            addData();
+            console.log(dataPoints);
+
+            function toggleDataSeries(e) {
+              if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+                e.dataSeries.visible = false;
+              } else {
+                e.dataSeries.visible = true;
+              }
+              chart.render();
+            }
+
+          }
+          else {
+            document.getElementById('trends').innerHTML = '<h2>Not Enough Data</h2>';
+          }
+      });
+
+      function loading () {
+        document.getElementById('hint').innerText = 'loading...';
+        var elem = document.getElementById('bar');
+        var width = 0;
+        var id = setInterval(frame, 120);
+        function frame() {
+          if (width >= 100) {
+            clearInterval(id);
+          } else {
+            width++; 
+            elem.style.width = width + '%';
+            elem.innerHTML = width * 1  + '%';
+          }
+        }
+        document.getElementById('bar').innerHTML = '';
+        document.getElementById('hint').innerHTML = '';
+      }
+
+      function reload() {
+        location.reload();
+      }
+
+    </script>
+    <style>
+      #loading {
+        width: 100%;
+        background-color: #fff;
+      }
+
+      #bar {
+        width: 0%;
+        height: 10px;
+        background-color: #081944;
+        text-align: center;
+        font-size: 10px;
+        line-height: 10px;
+        color: white;
+      }
+    </style>
+  <body>
+    <% include template/header.ejs %>
+    
+    <h1>KeywordMetrics 1.0</h1>
+    <form id="search" method="GET" action="/">
+        <label>Keywords: </label><input id="keywords" name="keywords" type="text" /> <input id="keywords" name="keywords" type="text" /> <input id="keywords" name="keywords" type="text" /> <input id="keywords" name="keywords" type="text" /> <input id="keywords" name="keywords" type="text" /><br><br>
+        <button id="generate" type="submit" value="Generate" onclick="loading()">Generate</button><br>
+    </form>
+    <br>
+    If you can't see data for the very first time, just try this one more time: <button id="reload" value="Reload" onclick="reload()">Reload</button>
+    <br><br>
+    <div id="hint"></div>
+    <div id="loading">
+      <div id="bar">0%</div>
+    </div>
+    <div id="trends_data" style="font-size: 0px;"><%= trends_data %></div>
+    <div id="trends" style="font-size: 16px; height: 400px;"><%= trends %></div><br><br>
+    <div id="result"><%= result %></div>
+  </body>
+</html>
