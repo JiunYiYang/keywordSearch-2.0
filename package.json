@@ -15,11 +15,11 @@
     "python-shell": "^0.4.0",
     "serve-favicon": "~2.4.5"
   },
-  "devDependencies": { },
+  "devDependencies": {},
   "scripts": {
     "start": "node ./bin/www"
   },
   "engines": {
-    "node": "8.5.0" 
+    "node": "8.5.0"
   }
 }

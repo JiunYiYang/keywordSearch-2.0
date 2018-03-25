@@ -22,6 +22,8 @@ for item in KEYWORDS_Moz_full:
     resultJson = json.loads(result.read())
     resultJsonClean = resultJson['suggestions']
     for array in ELE2:
-        array.append(item['keyword'])
+        # revise to get each keyword's list
+        for ele in resultJsonClean:
+            array.append(ele['keyword'])
 
 print(json.dumps(ELE2, ensure_ascii=False))
