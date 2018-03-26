@@ -17,13 +17,11 @@ ee = []
 ELE2 = [aa, bb, cc, dd, ee]
 
 headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.75 Safari/537.36'}
-for item in KEYWORDS_Moz_full:
-    result = ur.urlopen('https://moz.com/explorer/api/2.2.7/keyword/suggestions/' + item + '?locale=en-US&strategy=default')
+for i in range(0, len(KEYWORDS_Moz_full)):
+    result = ur.urlopen('https://moz.com/explorer/api/2.2.7/keyword/suggestions/' + KEYWORDS_Moz_full[i] + '?locale=en-US&strategy=default')
     resultJson = json.loads(result.read())
     resultJsonClean = resultJson['suggestions']
-    for array in ELE2:
-        # revise to get each keyword's list
-        for ele in resultJsonClean:
-            array.append(ele['keyword'])
+    for ele in resultJsonClean:
+        ELE2[i].append(ele['keyword'])
 
 print(json.dumps(ELE2, ensure_ascii=False))
