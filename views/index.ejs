@@ -12,7 +12,7 @@
         
         var tmp_googletrends = $.parseJSON($('#trends_data').text());
 
-        // first store keyword array from url params
+        // function for storing url parameters
         $.urlParam = function(name) {
           var results = new RegExp('[\?&]' + name + '=([^#]*)').exec(window.location.href);
           return results[1].split('&' + name + '=') || 0;
@@ -48,7 +48,7 @@
             rankTable.push('<tr>', '<td>', r+1, '</td>');
             for (var k=0; k<tmp_googletrends_keywords.length; k++) {
               if (tmp_googletrends[1][k][r]) {
-                rankTable.push('<td>', tmp_googletrends[1][k][r]["geoName"], '</td>', '<td>', tmp_googletrends[1][k][r][tmp_googletrends_keywords[k]], '</td>');
+                rankTable.push('<td><a href="/country/?keyword=', tmp_googletrends_keywords[k], '&country=', tmp_googletrends[1][k][r]["geoCode"], '">', tmp_googletrends[1][k][r]["geoName"], '</a></td>', '<td>', tmp_googletrends[1][k][r][tmp_googletrends_keywords[k]], '</td>');
                 // rankTable.push('<td>', 'test', '</td>', '<td>', 'test', '</td>');
               }
             }
@@ -243,7 +243,7 @@
   <body>
     <% include template/header.ejs %>
 
-    <h1>KeywordMetrics 1.0</h1>
+    <h1>KeywordMetrics 2.0</h1>
     <form id="search" method="GET" action="/">
         <label>Keywords: </label><input id="keywords" name="keywords" type="text" /> <input id="keywords" name="keywords" type="text" /> <input id="keywords" name="keywords" type="text" /> <input id="keywords" name="keywords" type="text" /> <input id="keywords" name="keywords" type="text" /><br><br>
         <!-- <label>Country: </label><input id="country" name="country" type="text" /><br><br> -->

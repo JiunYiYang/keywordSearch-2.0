@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+    <script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
+
+    <script>
+      $(document).ready(function() {
+
+        // function for storing url parameters
+        $.urlParam = function(query) {
+          var params = new RegExp('[\?&]' + query + '=([^&#]*)').exec(window.location.href);
+          return params ? decodeURI(params[1]) || 0 : null;
+        }
+        var tmp_keyword = $.urlParam('keyword');
+        var tmp_country = $.urlParam('country');
+        console.log(tmp_keyword);
+        document.getElementById('description').innerHTML = tmp_keyword + '\'s search trends in ' + tmp_country;
+
+        // store google trends dataset to tmp_quicktrends
+        var tmp_quicktrends = $.parseJSON($('#trendsData').text());
+
+        // draw chart by canvasjs
+        if (tmp_quicktrends != 'none') {
+          var dataPoints = [];
+          var chart = new CanvasJS.Chart("trendsChart", {
+            animationEnabled: true,
+            theme: "light2",
+            title: {
+              text: "Search Trends"
+            },
+            axisY: {
+              title: "Search Times",
+              titleFontSize: 24
+            },
+            toolTip: {
+              shared: "true"
+            },
+            data: [{
+              type: "spline",
+              visible: true,
+              showInLegend: true,
+              yValueFormatString: "#,### Times",
+              name: tmp_keyword,
+              dataPoints: dataPoints
+            }]
+          });
+
+          function addData(data) {
+            if (tmp_keyword != "") {
+              for (var i=0; i<tmp_quicktrends.length; i++) {
+                dataPoints.push({
+                  x: new Date(tmp_quicktrends[i].date),
+                  y: tmp_quicktrends[i][tmp_keyword]
+                });
+              }
+            } else {
+              dataPoints = [];
+            }
+            chart.render();
+          }
+          addData();
+          console.log(dataPoints);
+        } else {
+          document.getElementById('trendsChart').innerHTML = '<span>Google Trends Can\'t Find Enough Data</span>'
+        }
+      });
+
+      function loading() {
+        document.getElementById('hint').innerText = 'loading...';
+        var elem = document.getElementById('bar');
+        var width = 0;
+        var id = setInterval(frame, 100);
+        function frame() {
+          if (width >= 100) {
+            clearInterval(id);
+          } else {
+            width++;
+            elem.style.width = width + '%';
+            elem.innerHTML = width * 1 + '%';
+          }
+        }
+        document.getElementById('bar').innerHTML = '';
+        document.getElementById('hint').innerHTML = '';
+      }
+    </script>
+    <style>
+      #loading {
+        width: 100%;
+        background-color: #fff;
+      }
+
+      #bar {
+        width: 0%;
+        height: 10px;
+        background-color: #081944;
+        text-align: center;
+        font-size: 10px;
+        line-height: 10px;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <% include template/header.ejs %>
+    
+    <h1>KeywordMetrics 2.0 - Country Drill Down</h1>
+    <h2 id="description"></h2>
+    <div id="hint"></div>
+    <div id="loading">
+      <div id="bar">0%</div>
+    </div>
+    <div id="trendsData" style="font-size: 0px;"><%= trendsData %></div>
+    <div id="trendsChart" style="font-size: 16px; height: 400px;"></div><br><br>
+  </body>
+</html>
