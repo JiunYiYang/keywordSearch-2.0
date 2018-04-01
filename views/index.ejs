@@ -18,16 +18,16 @@
           return results[1].split('&' + name + '=') || 0;
         }
         var tmp_googletrends_keywords = $.urlParam('keywords');
-        // console.log(tmp_googletrends_keywords);
+        console.log(tmp_googletrends_keywords);
+        var tmp_googletrends_keywords_full = []
         for (var n=0; n<5; n++) {
-          if (tmp_googletrends_keywords[n] != undefined) {
-            tmp_googletrends_keywords[n] = tmp_googletrends_keywords[n].replace('+', ' ');
+          if (tmp_googletrends_keywords[n] != undefined && tmp_googletrends_keywords[n] != '') {
+            tmp_googletrends_keywords[n] = tmp_googletrends_keywords[n].replace(/\+/g, ' ');
             tmp_googletrends_keywords[n] = decodeURIComponent(tmp_googletrends_keywords[n]);
-          } else {
-            tmp_googletrends_keywords[n] = '';
+            tmp_googletrends_keywords_full.push(tmp_googletrends_keywords[n]);
           }
         }
-        console.log(tmp_googletrends_keywords);
+        console.log(tmp_googletrends_keywords_full);
 
         var tmp_ubersuggest = $.parseJSON($('#result').text());
         // $('#result').html(tmp_ubersuggest.replace(/", "/g, '<br>').replace(/\["/g, '<br>').replace(/\]"/g, '<br>'));
@@ -35,21 +35,18 @@
 
         // country rank table
         var outputRank = [];
-        if (tmp_googletrends_keywords && tmp_googletrends_keywords.length && tmp_googletrends[1] && tmp_googletrends[1].length) {
+        if (tmp_googletrends_keywords_full && tmp_googletrends_keywords_full.length && tmp_googletrends[1] && tmp_googletrends[1].length) {
           var rankTable = ['<table>'];
           rankTable.push('<tr><th>Rank</th>');
-          for (var v=0; v<tmp_googletrends_keywords.length; v++) {
-            if (tmp_googletrends_keywords[v] != '') {
-              rankTable.push('<th>', tmp_googletrends_keywords[v], '</th>', '<th>', 'Relatively Search Volume (0-100)', '</th>');
-            }
+          for (var v=0; v<tmp_googletrends_keywords_full.length; v++) {
+            rankTable.push('<th>', tmp_googletrends_keywords_full[v], '</th>', '<th>', 'Relatively Search Volume (0-100)', '</th>');
           }
           rankTable.push('</tr>');
           for (var r=0; r<10; r++) {
             rankTable.push('<tr>', '<td>', r+1, '</td>');
-            for (var k=0; k<tmp_googletrends_keywords.length; k++) {
+            for (var k=0; k<tmp_googletrends_keywords_full.length; k++) {
               if (tmp_googletrends[1][k][r]) {
-                rankTable.push('<td><a href="/country/?keyword=', tmp_googletrends_keywords[k], '&country=', tmp_googletrends[1][k][r]["geoCode"], '">', tmp_googletrends[1][k][r]["geoName"], '</a></td>', '<td>', tmp_googletrends[1][k][r][tmp_googletrends_keywords[k]], '</td>');
-                // rankTable.push('<td>', 'test', '</td>', '<td>', 'test', '</td>');
+                rankTable.push('<td><a href="/country/?keyword=', tmp_googletrends_keywords_full[k], '&country=', tmp_googletrends[1][k][r]["geoCode"], '">', tmp_googletrends[1][k][r]["geoName"], '</a></td>', '<td>', tmp_googletrends[1][k][r][tmp_googletrends_keywords_full[k]], '</td>');
               }
             }
             rankTable.push('</tr>');
@@ -63,13 +60,11 @@
 
         // keyword suggestions table
         var outputSuggest = [];
-        if (tmp_googletrends_keywords && tmp_googletrends_keywords.length && tmp_ubersuggest && tmp_ubersuggest.length) {
+        if (tmp_googletrends_keywords_full && tmp_googletrends_keywords_full.length && tmp_ubersuggest && tmp_ubersuggest.length) {
           var keywordTable = ['<table>'];
           keywordTable.push('<tr>');
-          for (var v=0; v<tmp_googletrends_keywords.length; v++) {
-            if (tmp_googletrends_keywords[v] != '') {
-              keywordTable.push('<th>', tmp_googletrends_keywords[v], '</th>');
-            }
+          for (var v=0; v<tmp_googletrends_keywords_full.length; v++) {
+            keywordTable.push('<th>', tmp_googletrends_keywords_full[v], '</th>');
           }
           keywordTable.push('</tr>');
           for (var s=0; s<50; s++) {

@@ -32,7 +32,7 @@ router.get('/', function(req, res, next) {
       queryEncodeList.push(encodeURIComponent(keywordQuery[i]));
     }
     console.log(queryEncodeList);
-    getGoogleTrends.send(keywordQuery);
+    getGoogleTrends.send(queryEncodeList);
     getMozKeywords.send(queryEncodeList);
     getGoogleTrends.on('message', function (message) {
       console.log(message);

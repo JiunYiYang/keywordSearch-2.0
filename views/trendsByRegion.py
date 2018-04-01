@@ -9,10 +9,25 @@ from random import randint
 import numpy as np
 import pandas as pd
 from pandas import DataFrame
+from urllib.parse import unquote
 
 KEYWORDS = sys.stdin.read().split()
-KEYWORDS = KEYWORDS[0].split(',')
-KEYWORDS_full = list(filter(None, KEYWORDS))
+KEYWORDS_a = KEYWORDS[0].split(',')
+# KEYWORDS_full = list(filter(None, KEYWORDS))
+KEYWORDS_decode = []
+KEYWORDS_full = []
+# clean the search string
+for elem in KEYWORDS_a:
+    elem_decode = unquote(elem)
+    elem_decode_a = elem_decode.replace(',', '')
+    elem_decode_b = elem_decode_a.replace('\'', '')
+    KEYWORDS_decode.append(elem_decode_b)
+
+# remove empty string
+for elem in KEYWORDS_decode:
+    if elem != '':
+        KEYWORDS_full.append(elem)
+
 
 # Login to Google. Only need to run this once, the rest of requests will use the same session.
 pytrend = TrendReq(hl='en-US', tz=360)
