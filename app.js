@@ -5,12 +5,31 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+// i18next module
+var i18n = require('i18next');
+var i18nFsBackend = require('i18next-node-fs-backend');
+var i18nMiddleware = require('i18next-express-middleware');
+
 var routes = require('./routes/index');
 var output = require('./routes/output');
 var country = require('./routes/country');
 // var users = require('./routes/users');
 
 var app = express();
+
+// i18next setup
+i18n.use(i18nMiddleware.LanguageDetector)
+    .use(i18nFsBackend)
+    .init({
+      fallbackLng: "en",
+      backend: {
+        loadPath: "locales/{{lng}}/translation.json",
+      }
+    });
+
+app.use(i18nMiddleware.handle(i18n, {
+
+}));
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
