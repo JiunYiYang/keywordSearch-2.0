@@ -2,7 +2,7 @@ window.onload = function() {
 
     document.getElementById('btn-htmlPdf').onclick = function() {
 
-        html2canvas(document.body).then(function (canvas) {
+        html2canvas(document.getElementById('content')).then(function (canvas) {
 
             background: '#FFFFFF';
 

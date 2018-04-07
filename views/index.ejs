@@ -252,13 +252,14 @@
         text-align: center;
       }
     </style>
-  <body id="content">
+  <body>
     <% include template/header.ejs %>
 
     <h1>KeywordMetrics 2.0</h1>
     <form id="search" method="GET" action="/">
         <label>Keywords: </label><input id="keywords" name="keywords" type="text" /> <input id="keywords" name="keywords" type="text" /> <input id="keywords" name="keywords" type="text" /> <input id="keywords" name="keywords" type="text" /> <input id="keywords" name="keywords" type="text" /><br><br>
         <!-- <label>Country: </label><input id="country" name="country" type="text" /><br><br> -->
+        <span>目前尚不支援中文搜尋</span>
         <button id="generate" type="submit" value="Generate" onclick="loading()">Generate</button><br>
     </form>
     <br>
@@ -268,10 +269,12 @@
     <div id="loading">
       <div id="bar">0%</div>
     </div>
-    <div id="trends_data" style="font-size: 0px;"><%= trends_data %></div>
-    <div id="trends" style="font-size: 16px; height: 400px;"><%= trends %></div><br><br>
-    <div id="countryRank"></div><br><br>
-    <div id="result"><%= result %></div>
+    <div id="content">
+      <div id="trends_data" style="font-size: 0px;"><%= trends_data %></div>
+      <div id="trends" style="font-size: 16px; height: 400px;"><%= trends %></div><br><br>
+      <div id="countryRank"></div><br><br>
+      <div id="result"><%= result %></div>
+    </div>
     <br>
     <button id="btn-htmlPdf">Export to PDF</button>
   </body>
