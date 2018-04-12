@@ -20,7 +20,7 @@ var mozPlanner;
 var googletrends;
 
 router.get('/', function(req, res, next) {
-  
+
   var keywordQuery = req.query.keywords;
   var queryEncodeList = [];
   console.log(keywordQuery);

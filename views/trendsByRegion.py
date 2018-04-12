@@ -33,15 +33,12 @@ for elem in KEYWORDS_decode:
 pytrend = TrendReq(hl='en-US', tz=360)
 
 # Create payload and capture API tokens. Only needed for interest_over_time(), interest_by_region() & related_queries()
-pytrend.build_payload(kw_list=KEYWORDS_full, cat=0, timeframe='today 12-m', geo='', gprop='')
-
-# get worldwide trends data
-if pytrend.interest_over_time().get(KEYWORDS_full) is not None:
-    worldTrends = json.loads(pytrend.interest_over_time().get(KEYWORDS_full).to_json(orient='table'))['data']
-    # worldTrends = json.dumps(preload, ensure_ascii=False)
-
-else:
+try:
+    pytrend.build_payload(kw_list=KEYWORDS_full, cat=0, timeframe='today 12-m', geo='', gprop='')
+except Exception:
     worldTrends = []
+else:
+    worldTrends = json.loads(pytrend.interest_over_time().get(KEYWORDS_full).to_json(orient='table'))['data']
 
 
 # sort by country order by volume dividly extract, and add to list
