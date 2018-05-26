@@ -9,7 +9,7 @@ from urllib.parse import unquote
 # from urllib.parse import quote
 
 KEYWORDS_Moz = sys.stdin.read().split()
-KEYWORDS_Moz = KEYWORDS_Moz[0].split(',')
+KEYWORDS_a = KEYWORDS_Moz[0].split(',')
 # KEYWORDS_Moz_full = list(filter(None, KEYWORDS_Moz))
 KEYWORDS_decode = []
 KEYWORDS_full = []
