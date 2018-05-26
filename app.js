@@ -1,7 +1,7 @@
 var express = require('express');
 var path = require('path');
 // var favicon = require('serve-favicon');
-var logger = require('morgan');
+var morgan = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
@@ -10,10 +10,21 @@ var i18n = require('i18next');
 var i18nFsBackend = require('i18next-node-fs-backend');
 var i18nMiddleware = require('i18next-express-middleware');
 
+// firebase setup
+var admin = require('firebase-admin');
+var serviceAccount = require('./kearch-official-firebase-adminsdk-z3y78-e45c9f7092.json');
+var firebaseAdmin = admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: 'https://kearch-official.firebaseio.com'
+})
+
+var session = require('express-session');
+
 var routes = require('./routes/index');
 var output = require('./routes/output');
 var country = require('./routes/country');
-// var users = require('./routes/users');
+var login = require('./routes/login');
+var signup = require('./routes/signup');
 
 var app = express();
 
@@ -37,15 +48,18 @@ app.set('view engine', 'ejs');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(logger('dev'));
+app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes);
+app.use('/kearch', routes);
 app.use('/output', output);
 app.use('/country', country);
+app.use('/', login);
+app.use('/signup', signup);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

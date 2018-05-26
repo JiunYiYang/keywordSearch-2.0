@@ -34,6 +34,7 @@ router.get('/', function(req, res, next) {
     console.log(queryEncodeList);
     getGoogleTrends.send(queryEncodeList);
     getMozKeywords.send(queryEncodeList);
+    console.log('sent');
     getGoogleTrends.on('message', function (message) {
       console.log(message);
       googletrends = message;
@@ -45,7 +46,7 @@ router.get('/', function(req, res, next) {
       var googletrends_local = googletrends;
       if (googletrends_local != null) {
         res.render('index', {
-          title: 'KeywordMetrics 2.0',
+          title: 'Search - Kearch 2.0',
           result: mozPlanner,
           trends_data: googletrends_local,
           trends: ''
@@ -69,7 +70,7 @@ router.get('/', function(req, res, next) {
     });
   } else {
     res.render('index', {
-      title: 'KeywordMetrics 2.0',
+      title: 'Search - Kearch 2.0',
       result: '',
       trends_data: '',
       trends: ''

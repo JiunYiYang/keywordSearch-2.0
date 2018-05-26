@@ -40,14 +40,14 @@ router.get('/', function(req, res, next) {
             quickTrends = message;
             if (quickTrends) {
                 res.render('country', {
-                    title: 'KeywordMetrics 2.0',
+                    title: 'Divided By Country - Kearch 2.0',
                     trendsData: quickTrends
                 });
             }
         });
     } else {
         res.render('country', { 
-            title: 'KeywordMetrics 2.0',
+            title: 'Divided By Country - Kearch 2.0',
             trendsData: ''
         });
     }
