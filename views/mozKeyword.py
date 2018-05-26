@@ -38,7 +38,7 @@ headers = {
 }
 
 proxy_host = 'proxy.crawlera.com'
-proxy_auth = HTTPProxyAuth('11446374f3a44394ae6165761d9055fd', '')
+proxy_auth = HTTPProxyAuth('', '')
 proxies = {
     'http': 'http://{}:8010/'.format(proxy_host)
 }
