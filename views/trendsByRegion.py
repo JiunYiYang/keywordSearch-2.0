@@ -10,6 +10,7 @@ import numpy as np
 import pandas as pd
 from pandas import DataFrame
 from urllib.parse import unquote
+from requests.auth import HTTPProxyAuth
 
 KEYWORDS = sys.stdin.read().split()
 KEYWORDS_a = KEYWORDS[0].split(',')
@@ -29,8 +30,16 @@ for elem in KEYWORDS_decode:
         KEYWORDS_full.append(elem)
 
 
+# pytrends with proxies
+proxy_host = 'proxy.crawlera.com'
+proxy_auth = HTTPProxyAuth('', '')
+proxies = {
+    'http': 'http://{}:8010/'.format(proxy_host)
+}
+
+
 # Login to Google. Only need to run this once, the rest of requests will use the same session.
-pytrend = TrendReq(hl='en-US', tz=360)
+pytrend = TrendReq(hl='en-US', tz=360, proxies=proxies)
 
 # Create payload and capture API tokens. Only needed for interest_over_time(), interest_by_region() & related_queries()
 try:

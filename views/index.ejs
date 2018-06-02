@@ -15,7 +15,7 @@
         }
         firebase.initializeApp(config)
     </script>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" href="/stylesheets/style.css" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
@@ -277,6 +277,13 @@
         transform: translateX(-50%);
         text-align: center;
       }
+
+      #downloadSpin img {
+        width: 5%;
+        position: relative;
+        margin: 10px 50% 20px 50%;
+        transform: translateX(-50%);
+      }
     </style>
   <body>
     <% include template/header.ejs %>
@@ -299,8 +306,8 @@
       <br>
     </form>
     <br>
-    Reload again if you can't see data correctly: 
-    <button 
+    Submit again if you can't see data correctly.
+    <!-- <button 
       id="reload"
       class="btn btn-light"
       value="Reload"
@@ -308,7 +315,8 @@
     >
       Reload
     </button>
-    <br><br>
+    <br> -->
+    <br>
     <div id="hint"></div>
     <div id="loading">
       <div id="bar">0%</div>
@@ -326,6 +334,9 @@
     >
       Export to PDF
     </button>
+    <div id="downloadSpin" style="display: none">
+      <img src="https://zippy.gfycat.com/SkinnySeveralAsianlion.gif" alt="">
+    </div>
     <button 
       id="signout"
       class="btn btn-danger"

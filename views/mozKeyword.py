@@ -49,7 +49,7 @@ proxies = {
 
 for i in range(0, len(KEYWORDS_full)):
     try:
-        r = requests.get('https://moz.com/explorer/api/2.4.1/keyword/suggestions/' + str(KEYWORDS_full[i]) + '?locale=zh-TW&strategy=default', headers=headers, proxies=proxies, auth=proxy_auth)
+        r = requests.get('https://moz.com/explorer/api/2.4.2/keyword/suggestions/' + str(KEYWORDS_full[i]) + '?locale=zh-TW&strategy=default', headers=headers, proxies=proxies, auth=proxy_auth)
         resultJson = json.loads(r.text)
         resultJsonClean = resultJson['suggestions']
     except:
