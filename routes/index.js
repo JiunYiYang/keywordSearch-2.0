@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var request = require('request');
+var morgan = require('morgan');
 
 var PythonShell = require('python-shell');
 
@@ -20,7 +21,6 @@ var mozPlanner;
 var googletrends;
 
 router.get('/', function(req, res, next) {
-
   var keywordQuery = req.query.keywords;
   var queryEncodeList = [];
   console.log(keywordQuery);

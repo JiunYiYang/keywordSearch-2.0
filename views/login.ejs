@@ -2,8 +2,6 @@
 <html>
     <head>
         <title>Login - Kearch 2.0</title>
-        <link rel='stylesheet' href='/stylesheets/style.css' />
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
         <script src='https://www.gstatic.com/firebasejs/5.0.4/firebase.js'></script>
         <script>
             // Initialize Firebase
@@ -16,6 +14,21 @@
                 messagingSenderId: '698807800186'
             }
             firebase.initializeApp(config)
+        </script>
+        <link rel='stylesheet' href='/stylesheets/style.css' />
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                function checkIfLoggedIn() {
+                    firebase.auth().onAuthStateChanged(function(user) {
+                        if (user) {
+                            window.location.replace('/kearch');
+                        }
+                    });
+                }
+                checkIfLoggedIn();
+            });
         </script>
     </head>
     <body>
