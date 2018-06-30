@@ -2,7 +2,76 @@
 <html>
   <head>
     <title><%= title %></title>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>    
     <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script>
+      $(document).ready(function() {
+        var keyword = 'beef';
+        fetch('https://moz.com/explorer/api/2.5/keyword/suggestions/detective?locale=zh-TW&strategy=default', {
+          cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+          credentials: 'same-origin', // include, same-origin, *omit
+          headers: {
+            'user-agent': 'Mozilla/4.0 MDN Example',
+            'content-type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+          },
+          method: 'GET',
+          mode: 'no-cors', // no-cors, cors, *same-origin
+        })
+        .then(function(response) {
+          return response.json();
+        })
+        .then(function(data) {
+          console.log(data)
+        });
+        // function createCORSRequest(method, url) {
+        //   var xhr = new XMLHttpRequest();
+        //   if ('withCredentials' in xhr) {
+        //     xhr.open(method, url, true);
+        //   } else if (typeof XDomainRequest != 'undefined') {
+        //     xhr = new XDomainRequest();
+        //     xhr.open(method, url);
+        //   } else {
+        //     xhr = null;
+        //   }
+        //   return xhr;
+        // }
+
+        // function makeCORSRequest() {
+        //   var url = 'https://moz.com/explorer/api/2.5/keyword/suggestions/' + keyword + '?locale=zh-TW&strategy=default';
+        //   var xhr = createCORSRequest('GET', url);
+        //   if (!xhr) {
+        //     alert('CORS not supported');
+        //     return;
+        //   }
+
+        //   xhr.onload = function() {
+        //     var text = JSON.parse(xhr.responseText);
+        //     var tmp_moz = text;
+        //     console.log(tmp_moz);
+        //   };
+
+        //   xhr.error = function() {
+        //     alert('Oops, there\'s an error when making request.');
+        //   };
+
+        //   xhr.send();
+        // }
+        // $.ajax({
+        //   type: 'GET',
+        //   url: '/mozdata',
+        //   contentType: 'application/json',
+        //   headers: {
+        //     'Access-Control-Allow-Origin': '*'
+        //   },
+        //   success: function(data) {
+        //     var tmp_moz = data;
+        //     console.log(tmp_moz);
+        //   },
+        //   dataType: 'json'
+        // });
+      });
+    </script>
   </head>
   <body>
     <% include template/header.ejs %>

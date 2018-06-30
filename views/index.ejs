@@ -208,10 +208,11 @@
       });
 
       function loading () {
+        // loading animation
         document.getElementById('hint').innerText = 'loading...';
         var elem = document.getElementById('bar');
         var width = 0;
-        var id = setInterval(frame, 80);
+        var id = setInterval(frame, 300);
         function frame() {
           if (width >= 100) {
             clearInterval(id);
@@ -223,6 +224,23 @@
         }
         document.getElementById('bar').innerHTML = '';
         document.getElementById('hint').innerHTML = '';
+
+        // prevent double submit
+        setTimeout(function() {
+          document.getElementById('generate').disabled = true;
+        }, 500);
+        $(document).on('keydown', function(e) {
+          if ((e.which || e.keyCode) == 116 || 13) {
+            e.preventDefault();
+            console.log('F5 & enter blocked.');
+          }
+        });
+        $(document).off('keydown', function(e) {
+          if ((e.which || e.keyCode) == 116 || 13) {
+            e.preventDefault();
+            console.log('F5 & enter blocked.');
+          }
+        });
       }
 
       function reload() {
@@ -305,8 +323,7 @@
         </button>
       <br>
     </form>
-    <br>
-    Generate again if you can't see data correctly.
+
     <!-- <button 
       id="reload"
       class="btn btn-light"

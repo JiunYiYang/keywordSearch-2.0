@@ -1,7 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var request = require('request');
-var morgan = require('morgan');
+var logging = require('logging');
+var async = require('async');
 
 var PythonShell = require('python-shell');
 
@@ -21,53 +22,82 @@ var mozPlanner;
 var googletrends;
 
 router.get('/', function(req, res, next) {
+
   var keywordQuery = req.query.keywords;
   var queryEncodeList = [];
   console.log(keywordQuery);
-  if (req.query.keywords != null) {
-    var getGoogleTrends = new PythonShell('trendsByRegion.py', options_g);
-    var getMozKeywords = new PythonShell('mozKeyword.py', options_m);
 
+  if (req.query.keywords != null) {
     for (var i=0; i<=4; i++) {
       queryEncodeList.push(encodeURIComponent(keywordQuery[i]));
     }
     console.log(queryEncodeList);
-    getGoogleTrends.send(queryEncodeList);
-    getMozKeywords.send(queryEncodeList);
-    console.log('sent');
-    getGoogleTrends.on('message', function (message) {
-      console.log(message);
-      googletrends = message;
-    });
 
-    getMozKeywords.on('message', function (message) {
-      console.log(message);
-      mozPlanner = message;
-      var googletrends_local = googletrends;
-      if (googletrends_local != null) {
-        res.render('index', {
-          title: 'Search - Kearch 2.0',
-          result: mozPlanner,
-          trends_data: googletrends_local,
-          trends: ''
+    function sendPythonShell1(queryEncodeList) {
+      return new Promise(function (resolve, reject) {
+        var getGoogleTrends = new PythonShell('trendsByRegion.py', options_g);
+        getGoogleTrends.send(queryEncodeList);
+        getGoogleTrends.on('message', function (message) {
+          resolve(message);
         });
+        getGoogleTrends.end(function (err) {
+          if (err){
+            reject(err);
+            throw err;
+          }
+        });
+      });
+    }
+
+    function sendPythonShell2(queryEncodeList) {
+      return new Promise(function (resolve, reject) {
+        var getMozKeywords = new PythonShell('mozKeyword.py', options_m);
+        getMozKeywords.send(queryEncodeList);
+        getMozKeywords.on('message', function (message) {
+          resolve(message);
+        });
+        getMozKeywords.end(function (err) {
+          if (err){
+            reject(err);
+            throw err;
+          }
+        });
+      });
+    }
+
+    async.parallel([
+
+      function(callback) {
+        console.log('parallel1 ready');
+        sendPythonShell1(queryEncodeList)
+          .then(function(result) {
+            console.log(result);
+            callback(null, result);
+          })
+          .catch(function(err) {
+            console.error(err);
+          });
+      },
+      function(callback) {
+        console.log('parallel2 ready');
+        sendPythonShell2(queryEncodeList)
+          .then(function(result) {
+            console.log(result);
+            callback(null, result);
+          })
+          .catch(function(err) {
+            console.error(err);
+          });
       }
+    ], (err, results) => {
+      res.render('index', {
+        title: 'Search - Kearch 2.0',
+        result: results[1],
+        trends_data: results[0],
+        trends: ''
+      })
     });
 
-
-    getGoogleTrends.end(function (err) {
-      if (err){
-        throw err;
-      };
-      console.log('finished');
-    });
-
-    getMozKeywords.end(function (err) {
-      if (err){
-        throw err;
-      };
-      console.log('finished');
-    });
   } else {
     res.render('index', {
       title: 'Search - Kearch 2.0',
@@ -76,6 +106,7 @@ router.get('/', function(req, res, next) {
       trends: ''
     });
   }
+
 });
 
 module.exports = router;
